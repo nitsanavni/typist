@@ -1,0 +1,79 @@
+#!/usr/bin/env python
+
+import sys
+import re
+import os
+import subprocess
+
+def expand(line):
+    """
+    Applies expansion functions to the input line.
+    """
+    line = expand_file_references(line)
+    line = expand_shell_commands(line)
+    return line
+
+def expand_file_references(line):
+    """
+    Replaces file path patterns starting with './' with the content of the file.
+    """
+    # Regex pattern to match file paths starting with './' followed by non-space characters
+    pattern = r'\./[^\s]*'
+
+    def replace_match(match):
+        path = match.group(0)
+        if os.path.isfile(path):
+            try:
+                with open(path, 'r') as f:
+                    content = f.read()
+                replacement = f"### File: `{path}`\n\n```\n{content}\n```\n"
+                return replacement
+            except Exception as e:
+                return f"[Error reading file {path}: {e}]"
+        else:
+            return f"[File not found: {path}]"
+
+    # Substitute all occurrences in the line
+    return re.sub(pattern, replace_match, line)
+
+def expand_shell_commands(line):
+    """
+    Replaces shell command patterns !cmd and $(cmd) with the output of the command.
+    """
+    # Replace !cmd patterns
+    def replace_bang_cmd(match):
+        cmd = match.group(1)
+        try:
+            result = subprocess.check_output(cmd, shell=True, text=True)
+            return result.strip()
+        except Exception as e:
+            return f"[Error executing command '{cmd}': {e}]"
+
+    # Replace patterns like '!command' at the end of the line
+    line = re.sub(r'!(.+)$', replace_bang_cmd, line)
+
+    # Replace $(cmd) patterns
+    def replace_dollar_paren_cmd(match):
+        cmd = match.group(1)
+        try:
+            result = subprocess.check_output(cmd, shell=True, text=True)
+            return result.strip()
+        except Exception as e:
+            return f"[Error executing command '{cmd}': {e}]"
+
+    # Replace patterns like '$(command)'
+    line = re.sub(r'\$\((.+?)\)', replace_dollar_paren_cmd, line)
+
+    return line
+
+def main():
+    """
+    Main function that reads from stdin and processes each line.
+    """
+    for line in sys.stdin:
+        transformed_line = expand(line)
+        print(transformed_line, end='')  # Print the transformed line
+
+if __name__ == '__main__':
+    main()
+
