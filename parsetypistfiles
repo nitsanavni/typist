@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+import sys
+import re
+
+def main():
+    input_text = sys.stdin.read()
+
+    # Regular expression pattern to find all sections
+    pattern = r'### File: `([^`]+)`\s*```(?:[\w+\s]*)\n(.*?)\n```'
+    matches = re.findall(pattern, input_text, re.DOTALL)
+
+    for idx, (filepath, content) in enumerate(matches):
+        print(filepath)
+        print(content)
+        if idx < len(matches) - 1:
+            print('---')
+
+if __name__ == "__main__":
+    main()
