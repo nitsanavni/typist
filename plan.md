@@ -1,0 +1,5 @@
+- parse response with multiple files
+  - output only files with unique separator
+    - first line: file path
+    - rest: file content
+- write to tmp files
