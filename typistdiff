@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+
+import sys
+import tempfile
+import subprocess
+
+
+def main():
+    # Read input from stdin
+    input_data = sys.stdin.read().strip().split("\n")
+
+    # Check if there's at least a file path and some file content
+    if len(input_data) < 2:
+        print("Invalid input format. Requires a file path and file content.")
+        return
+
+    # Extract file path and new file content from input
+    file_path = input_data[0]
+    new_content = "\n".join(input_data[1:])
+
+    # Read the existing content from the file
+    try:
+        with open(file_path, 'r') as file:
+            existing_content = file.read()
+    except FileNotFoundError:
+        existing_content = ""  # If the file doesn't exist, treat it as empty
+
+    # Create temporary files to store the new and existing content
+    with tempfile.NamedTemporaryFile(delete=False, mode='w') as new_file:
+        new_file_name = new_file.name
+        new_file.write(new_content)
+
+    with tempfile.NamedTemporaryFile(delete=False, mode='w') as existing_file:
+        existing_file_name = existing_file.name
+        existing_file.write(existing_content)
+
+    # Use vimdiff to display the differences
+    subprocess.run(["vimdiff", new_file_name, existing_file_name])
+
+
+if __name__ == "__main__":
+    main()
