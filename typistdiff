@@ -2,7 +2,7 @@
 
 import sys
 import tempfile
-import subprocess
+import os
 
 
 def main():
@@ -31,8 +31,8 @@ def main():
         new_file_name = new_file.name
         new_file.write(new_content)
 
-    # Use vimdiff to display the differences with the existing file
-    subprocess.run(["vimdiff", new_file_name, file_path])
+    # Use os.system to invoke vimdiff to display the differences with the existing file
+    os.system(f"vimdiff {new_file_name} {file_path}")
 
 
 if __name__ == "__main__":
