@@ -48,7 +48,7 @@ def expand_shell_commands(line):
         cmd = match.group(1)
         try:
             result = subprocess.check_output(cmd, shell=True, text=True)
-            return result.strip()
+            return f"### `{cmd}`\n\n```\n{result.strip()}\n```\n"
         except Exception as e:
             return f"[Error executing command '{cmd}': {e}]"
 
@@ -60,7 +60,7 @@ def expand_shell_commands(line):
         cmd = match.group(1)
         try:
             result = subprocess.check_output(cmd, shell=True, text=True)
-            return result.strip()
+            return f"### `{cmd}`\n\n```\n{result.strip()}\n```\n"
         except Exception as e:
             return f"[Error executing command '{cmd}': {e}]"
 
