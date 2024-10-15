@@ -1,0 +1,5 @@
+./expand | \
+cat typist.prompt.md - | \
+chat | \
+./parsetypistfiles | \
+./typistdiff
