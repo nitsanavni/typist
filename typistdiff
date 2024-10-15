@@ -18,24 +18,21 @@ def main():
     file_path = input_data[0]
     new_content = "\n".join(input_data[1:])
 
-    # Read the existing content from the file
+    # Check if the existing file exists, or treat it as empty if it doesn't
     try:
-        with open(file_path, 'r') as file:
-            existing_content = file.read()
+        with open(file_path, 'r'):
+            pass
     except FileNotFoundError:
-        existing_content = ""  # If the file doesn't exist, treat it as empty
+        print(
+            f"File '{file_path}' does not exist, treating it as empty for diffing.")
 
-    # Create temporary files to store the new and existing content
+    # Create a temporary file to store the new content
     with tempfile.NamedTemporaryFile(delete=False, mode='w') as new_file:
         new_file_name = new_file.name
         new_file.write(new_content)
 
-    with tempfile.NamedTemporaryFile(delete=False, mode='w') as existing_file:
-        existing_file_name = existing_file.name
-        existing_file.write(existing_content)
-
-    # Use vimdiff to display the differences
-    subprocess.run(["vimdiff", new_file_name, existing_file_name])
+    # Use vimdiff to display the differences with the existing file
+    subprocess.run(["vimdiff", new_file_name, file_path])
 
 
 if __name__ == "__main__":

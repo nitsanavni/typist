@@ -1,13 +1,3 @@
-write a script in python called `typistdiff`
+@./typistdiff
 
-reads from stdin, writes to stdout
-input is markdown
-
-input is:
-- first line: file path
-- rest: new file content
-
-it triggers vimdiff:
-- lhs: new file content
-- rhs: existing file content
-
+no need o dup the existing file, just use it as the right side of the diff
