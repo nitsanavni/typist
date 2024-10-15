@@ -32,7 +32,7 @@ def main():
         new_file.write(new_content)
 
     # Use os.system to invoke vimdiff to display the differences with the existing file
-    os.system(f"vimdiff {new_file_name} {file_path}")
+    os.system(f"tmux neww vimdiff {new_file_name} {file_path}")
 
 
 if __name__ == "__main__":
