@@ -7,32 +7,42 @@ import os
 
 def main():
     # Read input from stdin
-    input_data = sys.stdin.read().strip().split("\n")
+    input_data = sys.stdin.read().strip()
 
-    # Check if there's at least a file path and some file content
-    if len(input_data) < 2:
-        print("Invalid input format. Requires a file path and file content.")
+    if not input_data:
+        print("Invalid input format. Requires at least one file path and file content.")
         return
 
-    # Extract file path and new file content from input
-    file_path = input_data[0]
-    new_content = "\n".join(input_data[1:])
+    # Split input data by '---' to handle multiple entries
+    entries = input_data.split('---')
 
-    # Check if the existing file exists, or treat it as empty if it doesn't
-    try:
-        with open(file_path, 'r'):
-            pass
-    except FileNotFoundError:
-        print(
-            f"File '{file_path}' does not exist, treating it as empty for diffing.")
+    for entry in entries:
+        lines = entry.strip().split("\n")
 
-    # Create a temporary file to store the new content
-    with tempfile.NamedTemporaryFile(delete=False, mode='w') as new_file:
-        new_file_name = new_file.name
-        new_file.write(new_content)
+        # Check if there's at least a file path and some file content
+        if len(lines) < 2:
+            print("Invalid entry format. Requires a file path and file content.")
+            continue
 
-    # Use os.system to invoke vimdiff to display the differences with the existing file
-    os.system(f"tmux neww vimdiff {new_file_name} {file_path}")
+        # Extract file path and new file content from each entry
+        file_path = lines[0].strip()
+        new_content = "\n".join(lines[1:])
+
+        # Check if the existing file exists, or treat it as empty if it doesn't
+        try:
+            with open(file_path, 'r'):
+                pass
+        except FileNotFoundError:
+            print(
+                f"File '{file_path}' does not exist, treating it as empty for diffing.")
+
+        # Create a temporary file to store the new content
+        with tempfile.NamedTemporaryFile(delete=False, mode='w') as new_file:
+            new_file_name = new_file.name
+            new_file.write(new_content)
+
+        # Use os.system to invoke vimdiff to display the differences with the existing file
+        os.system(f"tmux neww vimdiff {new_file_name} {file_path}")
 
 
 if __name__ == "__main__":
