@@ -5,6 +5,7 @@ import re
 import os
 import subprocess
 
+
 def expand(line):
     """
     Applies expansion functions to the input line.
@@ -12,6 +13,7 @@ def expand(line):
     line = expand_file_references(line)
     line = expand_shell_commands(line)
     return line
+
 
 def expand_file_references(line):
     """
@@ -36,6 +38,7 @@ def expand_file_references(line):
     # Substitute all occurrences in the line
     return re.sub(pattern, replace_match, line)
 
+
 def expand_shell_commands(line):
     """
     Replaces shell command patterns !cmd and $(cmd) with the output of the command.
@@ -49,8 +52,8 @@ def expand_shell_commands(line):
         except Exception as e:
             return f"[Error executing command '{cmd}': {e}]"
 
-    # Replace patterns like '!command' at the end of the line
-    line = re.sub(r'!(.+)$', replace_bang_cmd, line)
+    # Replace patterns like '!command'
+    line = re.sub(r'^!([^\s].+)$', replace_bang_cmd, line)
 
     # Replace $(cmd) patterns
     def replace_dollar_paren_cmd(match):
@@ -66,6 +69,7 @@ def expand_shell_commands(line):
 
     return line
 
+
 def main():
     """
     Main function that reads from stdin and processes each line.
@@ -74,6 +78,6 @@ def main():
         transformed_line = expand(line)
         print(transformed_line, end='')  # Print the transformed line
 
+
 if __name__ == '__main__':
     main()
-
