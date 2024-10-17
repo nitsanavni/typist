@@ -1,3 +1,5 @@
+- expand: guess code block language
+- diff: prepare the 'approve' cmd right there
 - parse response with multiple files
   - output only files with unique separator
     - first line: file path

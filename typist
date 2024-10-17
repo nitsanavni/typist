@@ -1,5 +1,5 @@
-./expand | \
-cat typist.prompt.md - | \
+expand | \
+typistmakeprompt | \
 chat | \
-./parsetypistfiles | \
-./typistdiff
+parsetypistfiles | \
+typistdiff

@@ -42,7 +42,14 @@ def main():
             new_file.write(new_content)
 
         # Use os.system to invoke vimdiff to display the differences with the existing file
-        os.system(f"tmux neww vimdiff {new_file_name} {file_path}")
+        autoread = "set autoread"
+        approve = f"!cp {new_file_name} {file_path}"
+        approve_cmd = f"command! Approve execute 'silent {approve}' | qa"
+        notify = "echo 'Approve changes with :Approve'"
+        cmds = " ".join(
+            [f"-c \"{cmd}\"" for cmd in [autoread, approve_cmd, notify]])
+        os.system(
+            f"tmux neww vimdiff {cmds} {new_file_name} {file_path}")
 
 
 if __name__ == "__main__":
