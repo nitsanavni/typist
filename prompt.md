@@ -1,10 +1,3 @@
-@./typistdiff
+./d.sh
 
-input is multiple entries, each entry is:
-- frst line: file path
-- rest: file content
-
-separated by `---`
-
-for each di the tmux neww vimdiff please
-
+add one more -c to define a keymap for the :Approve command
